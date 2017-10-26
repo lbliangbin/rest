@@ -7,7 +7,7 @@ import (
 	"github.com/emicklei/go-restful-openapi"
 )
 
-// Server REST服务器
+// REST Server
 type Server struct {
 	// Container
 	*restful.Container
@@ -15,11 +15,11 @@ type Server struct {
 	// Swagger & Swagger UI
 	SwaggerPath   string             // default: /apidocs.json
 	SwaggerUIPath string             // default: /apidocs/
-	SwaggerUIDir  string             // Swagger UI地址
-	SwaggerConfig restfulspec.Config // swagger UI额外配置
+	SwaggerUIDir  string             // Swagger UI Dir
+	SwaggerConfig restfulspec.Config // swagger Config
 }
 
-// InstallSwaggerService 安装Swagger & SwaggerUI服务
+// Install Swagger & Swagger UI Service
 func (s *Server) InstallSwaggerService() {
 	if s.Container == nil {
 		return
@@ -35,14 +35,14 @@ func (s *Server) InstallSwaggerService() {
 	s.SwaggerConfig.WebServices = s.Container.RegisteredWebServices()
 	s.SwaggerConfig.APIPath = s.SwaggerPath
 
-	// 注册swagger描述文件
+	// add swagger service
 	s.Container.Add(restfulspec.NewOpenAPIService(s.SwaggerConfig))
 
-	// 注册swagger ui
+	// add swagger ui service
 	s.Container.ServeMux.Handle(s.SwaggerUIPath, http.StripPrefix(s.SwaggerUIPath, http.FileServer(http.Dir(s.SwaggerUIDir))))
 }
 
-// NewServer 创建新的Server
+// Create a REST server
 func NewServer() *Server {
 	return &Server{Container: restful.NewContainer()}
 }
